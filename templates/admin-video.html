@@ -137,6 +137,43 @@
       .button:hover {
         background-color: rgb(40, 158, 185);
       }
+
+      /* Flash Messages Styling */
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 20px;
+      }
+
+      ul li {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      /* Adjusting for Mobile Responsiveness */
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px;
+          width: 90%;
+        }
+
+        .form-group input,
+        button {
+          font-size: 14px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -151,6 +188,14 @@
     </div>
 
     <div class="main-content">
+      <div id="message-container">
+          <ul>
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %} {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+            {% endfor %} {% endif %} {% endwith %}
+          </ul>
+        </div>
       <div class="header">
         <h2>გაკვეთილები</h2>
       </div>
@@ -244,5 +289,21 @@
         </table>
       </div>
     </div>
+    
+    <script>
+      // შეტყობინებების ავტომატური გაქრობა
+      window.onload = function () {
+        const messageContainer = document.querySelector(".container ul"); // მოხსენება ელემენტზე, სადაც შეტყობინებებია
+        if (messageContainer) {
+          setTimeout(() => {
+            messageContainer.style.transition = "opacity 0.5s"; // გადასვლის ეფექტი
+            messageContainer.style.opacity = "0"; // გაქრობა
+            setTimeout(() => {
+              messageContainer.remove(); // გაქრობის შემდეგ ელემენტის წაშლა
+            }, 500); // 500 მილი/წამი – ეს არის დრო, რომლის შემდეგაც მოხდება ელემენტის წაშლა
+          }, 5000); // 5 წამი
+        }
+      };
+    </script>
   </body>
 </html>

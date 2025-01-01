@@ -13,10 +13,68 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <style>
+       /* Footer Styles */
+      footer {
+        background-color: #3cb2cd;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        margin-top: auto;
+      }
+
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
+
+      .flash-messages ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .flash-messages li {
+        background-color: rgba(60, 178, 205, 0.9);
+        color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fade-out 5s ease forwards;
+      }
+
+      @keyframes fade-out {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
     <title>CogniPeak - აზროვნების მწვერვალი</title>
   </head>
   <body>
   <header>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <ul>
+          {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+      </div>
     <div>
       <img
         class="logo"
@@ -126,5 +184,15 @@
   <footer class="footer">
     <div >&copy; 2025<span id="year"> </span><span> CogniPeak. ყველა უფლება დაცულია.</span></div>
 </footer>
+
+<script>
+      // Remove flash messages after 5 seconds
+      setTimeout(() => {
+        const flashMessages = document.querySelector(".flash-messages");
+        if (flashMessages) {
+          flashMessages.remove();
+        }
+      }, 10000);
+    </script>
   </body>
 </html>
