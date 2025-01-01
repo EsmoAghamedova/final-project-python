@@ -1,0 +1,41 @@
+<div class="main-content">
+  <div class="header">
+    <h2>გაკვეთილის რედაქტირება</h2>
+  </div>
+  <div class="section">
+    <form method="POST" enctype="multipart/form-data">
+
+      <label for="lesson-title">გაკვეთილის სათაური:</label>
+      <input
+        type="text"
+        name="lesson-title"
+        id="lesson-title"
+        placeholder="სათაური"
+        value="{{ lesson.title }}"
+        required
+      />
+
+      <label for="lesson-url">გაკვეთილის URL:</label>
+      <input
+        type="text"
+        name="lesson-url"
+        id="lesson-url"
+        placeholder="URL"
+        value="{{ lesson.url }}"
+        required
+      />
+
+      <label for="subject_id">საგანი და კლასი:</label>
+    <select name="subject_id" required>
+        {% for subject in subjects %}
+            <option value="{{ subject.id }}" {% if subject.id == lesson.subject_id %}selected{% endif %}>
+                {{ subject.name }} - {{ subject.class_name }}
+            </option>
+        {% endfor %}
+    </select>
+
+
+      <button type="submit" style="margin-top: 20px; border-radius: 5px; background-color: rgb(60, 178, 205); color: white; border: none; padding: 10px;">გაკვეთილის რედაქტირება</button>
+    </form>
+  </div>
+</div>

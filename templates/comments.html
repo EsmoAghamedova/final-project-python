@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
+    <title>კომეტარები</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: rgb(60, 178, 205);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .sidebar h3 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+
+      .sidebar ul li:hover {
+        background: rgb(40, 158, 185);
+      }
+
+      .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 20px;
+      }
+
+      .header {
+        background: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .section {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .section label {
+        font-weight: bold;
+        display: block;
+        margin: 10px 0 5px;
+      }
+
+      .section input,
+      .section button {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .section button {
+        background: rgb(60, 178, 205);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .section button:hover {
+        background: rgb(40, 158, 185);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <h3>ადმინი</h3>
+      <ul>
+        <li><a href="/admin-sagani">საგნები და კლასები</a></li>
+        <li><a href="/admin-video">გაკვეთილები</a></li>
+        <li><a href="/admin-comments">კომენტარები</a></li>
+        <li><a href="/logout">გამოსვლა</a></li>
+      </ul>
+    </div>
+    <div class="main-content">
+<h1>მომხმარებელთა შეტყობინებები</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>სახელი</th>
+                <th>ელ. ფოსტა</th>
+                <th>შეტყობინება</th>
+                <th>თარიღი</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+            <tr>
+                <td>{{ message.id }}</td>
+                <td>{{ message.name }}</td>
+                <td>{{ message.email }}</td>
+                <td>{{ message.message }}</td>
+                <td>{{ message.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+  </body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
+    <title>ადმინი - CogniPeak</title>
+
+    <style>
+      /* Body and Layout */
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        margin: 0;
+        background-color: #f4f4f4;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 250px;
+        background-color: rgb(60, 178, 205);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        position: fixed;
+        height: 100%;
+      }
+
+      .sidebar h3 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        padding: 10px 20px;
+        transition: background 0.3s;
+        cursor: pointer;
+      }
+
+      .sidebar ul li:hover {
+        background: rgb(40, 158, 185);
+      }
+
+      .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+      }
+
+      /* Main content */
+      .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        flex: 1;
+      }
+
+      .header {
+        background: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h2 {
+        margin: 0;
+      }
+
+      /* Section */
+      .section {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      .section label {
+        font-weight: bold;
+        display: block;
+        margin: 10px 0 5px;
+      }
+
+      .section input,
+      .section select,
+      .section textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .section button {
+        padding: 10px 20px;
+        background: rgb(60, 178, 205);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-size: 16px;
+      }
+
+      .section button:hover {
+        background: rgb(40, 158, 185);
+      }
+
+      /* Item List */
+      .item-list {
+        margin-top: 20px;
+      }
+
+      .item-list ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .item-list ul li {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .item-list ul li button {
+        margin-left: 10px;
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+
+      .item-list ul li button.edit {
+        background: orange;
+      }
+
+      /* Added items section */
+      .added-items {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .added-items h3 {
+        margin-bottom: 10px;
+        color: rgb(60, 178, 205);
+      }
+
+      .added-items .item {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+      }
+
+      .added-items .item span {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 16px;
+      }
+
+      .added-items .item .buttons {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .added-items .item .buttons button {
+        margin-left: 10px;
+      }
+
+      .added-items {
+        margin-top: 20px;
+      }
+
+      .added-items h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      /* Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      table th,
+      table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+      }
+
+      table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      table tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        width: 200px;
+      }
+
+      .btn-edit {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+      }
+
+      .btn-edit:hover {
+        background-color: #45a049;
+      }
+
+      .btn-delete {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        margin-left: 10px;
+      }
+
+      .btn-delete:hover {
+        background-color: #e53935;
+      }
+
+      form {
+        display: inline-block;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 95%;
+      }
+
+      /* Form Styling */
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Form Group Styling */
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-top: 5px;
+      }
+
+      /* Button Styling */
+      button {
+        padding: 12px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      /* Flash Messages Styling */
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 20px;
+      }
+
+      ul li {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      /* Adjusting for Mobile Responsiveness */
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px;
+          width: 90%;
+        }
+
+        .form-group input,
+        button {
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>ადმინი</h3>
+      <ul>
+        <li><a href="/admin-sagani">საგნები და კლასები</a></li>
+        <li><a href="/admin-video">გაკვეთილები</a></li>
+        <li><a href="/admin-comments">კომენტარები</a></li>
+        <li><a href="/logout">გამოსვლა</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div style="margin-bottom: 40px" class="header">
+        <h2>საგნების და კლასების მართვა</h2>
+      </div>
+
+      <div class="container">
+        <div id="message-container">
+          <ul>
+            {% with messages = get_flashed_messages(with_categories=true) %} {%
+            if messages %} {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+            {% endfor %} {% endif %} {% endwith %}
+          </ul>
+        </div>
+        <form method="POST">
+          <div class="form-group">
+            <label for="subject_name">საგანი</label>
+            <input
+              type="text"
+              name="subject_name"
+              id="subject_name"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="class_name">კლასი</label>
+            <input
+              type="text"
+              name="class_name"
+              id="class_name"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">დამატება</button>
+        </form>
+
+        <!-- Added Items List -->
+        <div class="added-items">
+          <h2>საგნები და კლასები</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>საგანი</th>
+                <th>კლასი</th>
+                <th>მოქმედება</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for subject in subjects %}
+              <tr>
+                <td>{{ subject.name }}</td>
+                <td>{{ subject.class_name }}</td>
+                <td>
+                  <a
+                    href="{{ url_for('edit_subject', subject_id=subject.id) }}"
+                    class="btn btn-edit"
+                    >რედაქტირება</a
+                  >
+                  <form
+                    action="{{ url_for('delete_subject', subject_id=subject.id) }}"
+                    method="POST"
+                    style="display: inline"
+                  >
+                    <button type="submit" class="btn btn-delete">წაშლა</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // შეტყობინებების ავტომატური გაქრობა
+      window.onload = function () {
+        const messageContainer = document.querySelector(".container ul"); // მოხსენება ელემენტზე, სადაც შეტყობინებებია
+        if (messageContainer) {
+          setTimeout(() => {
+            messageContainer.style.transition = "opacity 0.5s"; // გადასვლის ეფექტი
+            messageContainer.style.opacity = "0"; // გაქრობა
+            setTimeout(() => {
+              messageContainer.remove(); // გაქრობის შემდეგ ელემენტის წაშლა
+            }, 500); // 500 მილი/წამი – ეს არის დრო, რომლის შემდეგაც მოხდება ელემენტის წაშლა
+          }, 5000); // 5 წამი
+        }
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
+    <title>პარამეტრები</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 250px;
+        background-color: rgb(60, 178, 205);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .sidebar h3 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        padding: 10px 20px;
+        transition: background 0.3s;
+        cursor: pointer;
+      }
+
+      .sidebar ul li:hover {
+        background: rgb(40, 158, 185);
+      }
+
+      .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+      }
+
+      /* Main Content */
+      .main-content {
+        display: none;
+      }
+
+      .mainn-content {
+        margin-top: 30px;
+        margin-left: 300px;
+        margin-right: 20px;
+      }
+
+      .header {
+        background: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h2 {
+        margin: 0;
+      }
+
+      .content {
+        padding: 20px;
+        flex: 1;
+      }
+
+      .settings-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .settings-card h3 {
+        margin-top: 0;
+        text-align: center;
+      }
+
+      .settings-card label {
+        font-weight: bold;
+        display: block;
+        margin: 10px 0 5px;
+      }
+
+      .settings-card select,
+      .settings-card input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .settings-card button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: rgb(60, 178, 205);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-size: 16px;
+      }
+
+      .settings-card button:hover {
+        background: rgb(40, 158, 185);
+      }
+
+      /* ანიმაცია და სტილი */
+      #new-password-field {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    {% include 'base-user.html' %} {% block content %}
+    <!-- Main Content -->
+    <div class="mainn-content">
+      <div class="header">
+        <h2>პარამეტრები</h2>
+      </div>
+      <div class="content">
+        <div class="settings-card">
+          <h3>პარამეტრები</h3>
+          <label for="language">ენის არჩევა:</label>
+          <select id="language">
+            <option value="ge">ქართული</option>
+            <option value="en">English</option>
+          </select>
+
+          <label for="notifications">შეტყობინებები:</label>
+          <input
+            type="checkbox"
+            id="notifications"
+            style="width: auto; height: auto; margin-right: 5px"
+          />
+
+          <h3>პაროლის შეცვლა</h3>
+
+    <form action="{{ url_for('change_password') }}" method="POST">
+        <!-- ძველი პაროლი -->
+        <label for="old_password">ძველი პაროლი:</label>
+        <input type="password" name="old_password" id="old_password" required><br><br>
+
+        <!-- ახალი პაროლი და მისი დადასტურება -->
+        <div id="new-password-field">
+            <label for="new_password">ახალი პაროლი:</label>
+            <input type="password" name="new_password" id="new_password" required><br><br>
+
+            <label for="confirm_password">დაადასტურეთ ახალი პაროლი:</label>
+            <input type="password" name="confirm_password" id="confirm_password" required><br><br>
+        </div>
+
+        <button type="submit">პაროლის შეცვლა</button>
+    </form>
+
+    <script>
+        // JavaScript-ის გამოყენება პაროლის შეცვლის ანიმაციისთვის
+        document.getElementById('old_password').addEventListener('input', function() {
+            const oldPassword = this.value;
+            const newPasswordField = document.getElementById('new-password-field');
+
+            // შეამოწმე, რომ ძველი პაროლი სწორია (ეს შეიძლება იყოს შენს server-side logic-ზე)
+            fetch('/check_old_password', {
+                method: 'POST',
+                body: JSON.stringify({ old_password: oldPassword }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // თუ ძველი პაროლი სწორია, გამოჩნდება ახალი პაროლის ველები
+                    newPasswordField.style.display = 'block';
+                } else {
+                    // თუ ძველი პაროლი არასწორია, დამალეთ ახალი პაროლის ველები
+                    newPasswordField.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+          <form action="{{ url_for('reset_progress') }}" method="POST">
+            <button
+              type="submit"
+              class="btn btn-warning"
+              style="margin-top: 20px; background-color: #ffc107"
+            >
+              გაანულე პროგრესი
+            </button>
+          </form>
+
+          <form action="{{ url_for('delete_account') }}" method="POST">
+            <button
+              type="submit"
+              class="btn btn-danger"
+              style="margin-top: 20px; background-color: #dc3545"
+            >
+              პროფილის წაშლა
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endblock content %}
+  </body>
+</html>
