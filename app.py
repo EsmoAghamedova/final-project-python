@@ -15,7 +15,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 db = SQLAlchemy(app)
 
-# Model for User
+# ბაზა
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -33,15 +33,14 @@ class User(db.Model):
 class VideoWatch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'), nullable=False)  # Reference to the Lesson
-    watched_at = db.Column(db.DateTime, default=datetime.utcnow)  # Store the watch time
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'), nullable=False)  
+    watched_at = db.Column(db.DateTime, default=datetime.utcnow)  
 
-# Model for Subject
 class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     class_name = db.Column(db.String(10), nullable=False)
-    lessons = db.relationship('Lesson', backref='subject', lazy=True)  # სწორად განსაზღვრული ურთიერთობა
+    lessons = db.relationship('Lesson', backref='subject', lazy=True)  
 
     __table_args__ = (
         db.UniqueConstraint('name', 'class_name', name='_name_class_uc'),
@@ -50,12 +49,11 @@ class Subject(db.Model):
     def __repr__(self):
         return f'<Subject {self.name} {self.class_name}>'
 
-# Model for Lesson (with image and title)
 class Lesson(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     url= db.Column(db.String(200), nullable=False)
-    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)  # სწორი ForeignKey
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)  
 
     def __repr__(self):
         return f'<Lesson {self.title} for Subject {self.subject.name}>'
@@ -67,23 +65,25 @@ class ContactMessage(db.Model):
     message = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-# Initialize database tables
+# ბაზის შექმნა
 @app.before_request
 def create_tables():
     db.create_all()
     
 
-    
+# მთავარი გვერდი
 @app.route('/')
 def index():
     if 'user_id' in session:
         return redirect(url_for('dashboard' if not session.get('is_admin') else 'admin_panel'))
     return render_template('index.html')
 
+# ჩვენს შესახებ
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+# კონტაქტი
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
@@ -100,30 +100,31 @@ def contact():
 
     return render_template('contact.html')
 
+# გაკვეთილების გვერდი რომელიც მალე დაემატება
 @app.route('/gakvetilebi')
 def gakvetilebi():
     return render_template('1.html')
 
-# Password validation function
+# პაროლის ვალიდაციის ფუნქცია
 def validate_password(password):
     if len(password) < 8:
         return False, "პაროლი 8 ან მეტ ასოს უნდა შეიცავდეს."
     
-    if not re.search("[A-Z]", password):  # Check for at least one uppercase letter
+    if not re.search("[A-Z]", password):  
         return False, "პაროლი ერთ დიდ ლათინურ ასოს მაინც უნდა შეიცავდეს."
     
-    if not re.search("[a-z]", password):  # Check for at least one lowercase letter
+    if not re.search("[a-z]", password):  
         return False, "პაროლი ერთ პატარა ლათინურ ასოს მაინც უნდა შეიცავდეს."
     
-    if not re.search("[0-9]", password):  # Check for at least one digit
+    if not re.search("[0-9]", password): 
         return False, "პაროლი ერთ ციფრს მაინც უნდა შეიცავდეს."
     
-    if not re.search("[!@#$%^&*(),.?\":{}|<>]", password):  # Check for special characters
+    if not re.search("[!@#$%^&*(),.?\":{}|<>]", password):  
         return False, "პაროლი ერთ სპეციალურ სიმბოლოს მაინც უნდა შეიცავდეს."
     
     return True, "Password is valid."
 
-# Signup route
+# რეგისტრაცია
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -141,7 +142,7 @@ def signup():
             flash("პაროლი არ ემთხვევა!", 'error')
             return redirect(url_for('signup'))
 
-        # Validate password strength
+        # პაროლის ვალიდაცია
         is_valid, message = validate_password(password)
         if not is_valid:
             flash(message, 'error')
@@ -165,7 +166,7 @@ def signup():
 
     return render_template('signup.html')
 
-# Login route
+# შესვლა
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -176,34 +177,34 @@ def login():
             flash("შეიყვანეთ ყველა უჯრა!", 'error')
             return redirect(url_for('login'))
 
-        # Find user by email or username
+        # მომხმარებლის მეილით ან სახელით მოძებნა
         user = User.query.filter(
             (User.email == email_or_username) | (User.username == email_or_username)
         ).first()
 
         if user:
-            print(f"User found: {user.username}, {user.email}")  # Log
+            print(f"User found: {user.username}, {user.email}")  
 
-            # If password matches
+            # პაროლის შემოწმება
             if check_password_hash(user.password, password):
                 session['user_id'] = user.id
                 session['is_admin'] = user.email == "esmira.agamedovate03@geolab.edu.ge"
                 flash("წარმატებით შეხვდით!", 'success')
 
-                # Redirect to admin panel if email matches
+                # ადმინის პანლეზე გადასვლა
                 return redirect(url_for('admin_panel' if user.email == "esmira.agamedovate03@geolab.edu.ge" else 'dashboard'))
             else:
-                print("Incorrect password!")  # Log
+                print("Incorrect password!")  
                 flash("პაროლი არასწორია!", 'error')
         else:
-            print("User not found!")  # Log
+            print("User not found!") 
             flash("მონაცემი არასწორია!", 'error')
 
         return redirect(url_for('login'))
 
     return render_template('login.html')
 
-# Dashboard route
+# მომხმარებლის მთავარი გვერდი
 @app.route('/dashboard')
 def dashboard():
     # შეამოწმე, არის თუ არა მომხმარებელი ავტორიზებული და არა ადმინისტრატორი
@@ -228,36 +229,35 @@ def dashboard():
             total_score=video_score
         )
 
-    # არავაუთორიზებულ მომხმარებელს გადამისამართება
-    flash("You need to log in first!", 'error')
+    # არა ავტორიზებული მომხმარებლის გადამისამართება
+    flash("პირველ რიგში შესვლა გიწევს!", 'error')
     return redirect(url_for('login'))
 
 @app.route('/foryou')
 def foryou():
-    # Query all lessons to display on the 'for you' page
     lessons = Subject.query.all()
     return render_template('foryou.html', subjects=lessons)
 
 @app.route('/watch/<int:lesson_id>')
 def watch_video(lesson_id):
-    # შეამოწმეთ, არის თუ არა მომხმარებელი შესული
+    # შემოწმება, არის თუ არა მომხმარებელი შესული
     if 'user_id' in session:
         user_id = session['user_id']
         user = User.query.get(user_id)
         
-        # მოძებნეთ გაკვეთილი ID-ის მიხედვით
+        # მოძებნა გაკვეთილის ID-ის მიხედვით
         lesson = Lesson.query.get(lesson_id)
         
         if user and lesson:
-            # შეამოწმეთ, თუ ეს ვიდეო უკვე ნანახია
+            # შემოწმება იმისი თუ ეს ვიდეო უკვე ნანახი აქვს მომხმარებელს
             video_watch = VideoWatch.query.filter_by(user_id=user.id, lesson_id=lesson.id).first()
             
             if not video_watch:  # თუ ვიდეო ჯერ არ ნანახია
-                # დაამატეთ ნაყურები ვიდეო და ქულა
+                # დაემატება ნაყურები ვიდეო და ქულა
                 user.videos_watched += 1
                 user.points += 50
                 
-                # დაამატეთ ახალი ჩანაწერი VideoWatch მოდელში
+                # დაემატება ახალი ჩანაწერი VideoWatch მოდელში
                 video_watch = VideoWatch(user_id=user.id, lesson_id=lesson.id)
                 db.session.add(video_watch)
                 db.session.commit()
@@ -277,11 +277,11 @@ def watch_video(lesson_id):
 
 @app.route('/search_lessons', methods=['GET'])
 def search_lessons():
-    query = request.args.get('query')  # Receive 'query' parameter
+    query = request.args.get('query') 
     lessons = Lesson.query.filter(
-        Lesson.title.contains(query)  # Search for lessons with a title that contains the query
-    ).all()  # Retrieve matching lessons from the database
-    return render_template('search_results.html', lessons=lessons)  # Display the found lessons
+        Lesson.title.contains(query)  
+    ).all()  
+    return render_template('search_results.html', lessons=lessons)  
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -296,7 +296,7 @@ def profile():
                 new_username = request.form['username']
                 new_email = request.form['email']
 
-                # შეამოწმე, თუ უკვე არსებობს იგივე მომხმარებლის სახელი ან მეილი
+                # შეამოწმება, თუ უკვე არსებობს იგივე მომხმარებლის სახელი ან მეილი
                 existing_user = User.query.filter_by(username=new_username).first()
                 existing_email = User.query.filter_by(email=new_email).first()
 
@@ -317,10 +317,10 @@ def profile():
             return render_template('profile.html', user=user)  # ნაჩვენები პროფილის გვერდი
         else:
             flash("მომხმარებელი ვერ მოიძებნა.", 'error')
-            return redirect(url_for('login'))  # თუ მომხმარებელი ვერ მოიძებნა, გადმოხვედით სარეგისტრაციო გვერდზე
+            return redirect(url_for('login'))  # თუ მომხმარებელი ვერ მოიძებნა, გადადის სარეგისტრაციო გვერდზე
     else:
         flash("ავტორიზაცია საჭიროა!", 'error')
-        return redirect(url_for('login'))  # თუ არ არის ავტორიზებული, გადმოიყვანე შესვლის გვერდზე
+        return redirect(url_for('login'))  # თუ არ არის ავტორიზებული, გადადის შესვლის გვერდზე
 
 @app.route('/settings')
 def settings():
@@ -333,10 +333,10 @@ def reset_progress():
         user = User.query.get(user_id)
         
         if user:
-            # ნაყურები ვიდეოებისგან განახლება
+            # ნაყურები ვიდეოების განახლება
             user.videos_watched = 0
             
-            # ქულებისგან განახლება
+            # ქულების განახლება
             user.points = 0
             
             # ყველა ნანახი ვიდეოს ამოღება VideoWatch მოდელიდან
@@ -365,7 +365,7 @@ def change_password():
                 new_password = request.form['new_password']
                 confirm_password = request.form['confirm_password']
 
-                # მოძებნე, რომ ძველი პაროლი სწორია
+                # ძველი პაროლის დადასტურება
                 if not check_password_hash(user.password, old_password):
                     flash("თქვენი ძველი პაროლი არასწორია.", 'error')
                     return redirect(url_for('change_password'))
@@ -447,7 +447,7 @@ def contactt():
 
     return render_template('contact-1.html')
 
-# Admin panel routes
+# ადმინის პანელი
 @app.route('/admin-sagani', methods=['GET', 'POST'])
 def admin_panel():
     if 'user_id' in session and session.get('is_admin'):
@@ -457,31 +457,31 @@ def admin_panel():
 
             if subject_name and class_name:
                 try:
-                    # Check if subject already exists with same name and class
+                    # ამოწმებს საგნისა და კლასის კომბინაცია არსებობს თუ არა უკვე
                     existing_combination = Subject.query.filter_by(name=subject_name, class_name=class_name).first()
 
                     if existing_combination:
-                        flash(f"Subject '{subject_name}' and Class '{class_name}' already exists!", 'error')
+                        flash(f"საგანი '{subject_name}' და კლასი '{class_name}' არსებობს!", 'error')
                     else:
                         new_subject = Subject(name=subject_name, class_name=class_name)
                         db.session.add(new_subject)
                         db.session.commit()
-                        flash(f"Subject '{subject_name}' and Class '{class_name}' added successfully!", 'success')
+                        flash(f"საგანი '{subject_name}' და კლასი '{class_name}' დაემატა!", 'success')
                 
                 except Exception as e:
                     db.session.rollback()
-                    flash(f"An error occurred while adding the subject: {e}", 'error')
+                    flash(f"საგნის დამატებისას პრობლემა წარმოიქმნა: {e}", 'error')
             else:
-                flash("Both Subject name and Class name are required!", 'error')
+                flash("ორივე ველის შევსება სავალდებულოა!", 'error')
 
         subjects = Subject.query.all()
 
         return render_template('admin-sagani.html', subjects=subjects)
     
-    flash("You need to log in as an admin!", 'error')
+    flash("ადმინის სახით გიწევთ შესვლა!", 'error')
     return redirect(url_for('login'))
 
-# Edit Subject route
+
 @app.route('/admin/sagani/edit/<int:subject_id>', methods=['GET', 'POST'])
 def edit_subject(subject_id):
     if 'user_id' in session and session.get('is_admin'):
@@ -494,24 +494,23 @@ def edit_subject(subject_id):
                 existing_combination = Subject.query.filter_by(name=subject_name, class_name=class_name).first()
 
                 if existing_combination and existing_combination.id != subject_id:
-                    flash(f"Subject '{subject_name}' and Class '{class_name}' already exists!", 'error')
+                    flash(f"საგანი '{subject_name}' და კლასი '{class_name}' არსებობს!", 'error')
                 else:
                     subject.name = subject_name
                     subject.class_name = class_name
                     try:
                         db.session.commit()
-                        flash(f"Subject '{subject_name}' updated successfully!", 'success')
+                        flash(f"საგანი '{subject_name}' დარედაქტირდა!", 'success')
                     except Exception as e:
                         db.session.rollback()
-                        flash(f"An error occurred while updating the subject: {e}", 'error')
+                        flash(f"რედაქტირებისას პრობლემა წარმოიქმნა: {e}", 'error')
             else:
-                flash("Both Subject name and Class name are required!", 'error')
+                flash("ორივე ველის შევსება სავალდებულოა!", 'error')
 
         return render_template('edit_subject.html', subject=subject)
-    flash("You need to log in as an admin!", 'error')
+    flash("ადმინის სახით გიწევთ შესვლა!", 'error')
     return redirect(url_for('login'))
 
-# Delete Subject route
 @app.route('/admin/sagani/delete/<int:subject_id>', methods=['POST'])
 def delete_subject(subject_id):
     if 'user_id' in session and session.get('is_admin'):
@@ -519,19 +518,19 @@ def delete_subject(subject_id):
         try:
             db.session.delete(subject)
             db.session.commit()
-            flash(f"Subject '{subject.name}' deleted successfully!", 'success')
+            flash(f"საგანი '{subject.name}' წაიშალა!", 'success')
         except Exception as e:
             db.session.rollback()
-            flash("An error occurred during deletion, please try again later.", 'error')
+            flash("საგნის წაშლისას პრობლემა წარმოიქმნა, მოგვიანებით ისევ სცადეთ.", 'error')
 
         return redirect(url_for('admin_panel'))
-    flash("You need to log in as an admin!", 'error')
+    flash("ადმინის სახით გიწევთ შესვლა!", 'error')
     return redirect(url_for('login'))
 
 @app.route('/subject-page/<int:subject_id>', methods=['GET'])
 def subject_page(subject_id):
-    subject = Subject.query.get(subject_id)  # Assuming Subject is a model for the subject
-    lessons = Lesson.query.filter_by(subject_id=subject_id).all()  # Fetch lessons for the specific subject
+    subject = Subject.query.get(subject_id)  
+    lessons = Lesson.query.filter_by(subject_id=subject_id).all()  
     return render_template('subject_page.html', subject=subject, lessons=lessons)
 
 @app.route('/admin-video', methods=['GET', 'POST'])
@@ -540,7 +539,6 @@ def admin_video():
         title = request.form['lesson-title']
         subject_id = request.form['subject_id']
         
-        # უბრალოდ დაამატეთ გაკვეთილი, სადაც სურათის დასამატებლად არ ხდება მოქმედება
         lesson = Lesson(title=title, url=request.form['lesson-url'], subject_id=subject_id)
         db.session.add(lesson)
         db.session.commit()
@@ -553,8 +551,8 @@ def admin_video():
 
 @app.route('/edit_lesson/<int:lesson_id>', methods=['GET', 'POST'])
 def edit_lesson(lesson_id):
-    lesson = Lesson.query.get(lesson_id)  # Get the lesson by id
-    subjects = Subject.query.all()  # Get all subjects for the dropdown
+    lesson = Lesson.query.get(lesson_id)  
+    subjects = Subject.query.all()  
 
     if request.method == 'POST':
         lesson.title = request.form['lesson-title']
@@ -584,9 +582,9 @@ def admin_comments():
 @app.route('/logout')
 def logout():
     session.clear()
-    flash("Logged out successfully!", 'success')
-    return redirect(url_for('index'))  # ამან უნდა განახორციელოს გადამისამართება
+    flash(" წარმატებით გამოხვედით პროფილიდან!", 'success')
+    return redirect(url_for('index'))  # გადადის მთავარ გვერდზე
 
-# Run app
+# აპის დაწყება
 if __name__ == '__main__':
     app.run(debug=True)
