@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
-    <title>კომეტარები</title>
+    <title>კომენტარები</title>
     <style>
       body {
         margin: 0;
@@ -183,35 +183,27 @@
       </ul>
     </div>
     <div class="main-content">
-<h1>მომხმარებელთა შეტყობინებები</h1>
-    <table border="1">
+      <h1>მომხმარებლები</h1>
+      <table>
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>სახელი</th>
-                <th>ელ. ფოსტა</th>
-                <th>შეტყობინება</th>
-                <th>თარიღი</th>
-                <th>წაშლა</th>
-            </tr>
+          <tr>
+            <th>სახელი</th>
+            <th>მომხმარებლის სახელი</th>
+            <th>მეილი</th>
+            <th>ადმინი</th>
+          </tr>
         </thead>
         <tbody>
-            {% for message in messages %}
+          {% for user in users %}
             <tr>
-                <td>{{ message.id }}</td>
-                <td>{{ message.name }}</td>
-                <td>{{ message.email }}</td>
-                <td>{{ message.message }}</td>
-                <td>{{ message.timestamp }}</td>
-                <td>
-                    <form action="{{ url_for('delete_message', message_id=message.id) }}" method="POST">
-                        <button type="submit">წაშლა</button>
-                    </form>
-                </td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.is_admin }}</td>
             </tr>
-            {% endfor %}
+          {% endfor %}
         </tbody>
-    </table>
-
+      </table>
+    </div>
   </body>
 </html>

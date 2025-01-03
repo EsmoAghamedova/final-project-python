@@ -75,6 +75,17 @@
     align-items: flex-end;
     padding: 0 20px;">
     <div>
+     <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <ul>
+          {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+      </div>
+       
     <a href="/dashboard" style="text-decoration: underline; color: white;"><p>უკან დაბრუნება</p></a>
     </div>
   </header>

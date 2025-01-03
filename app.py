@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask import jsonify
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_migrate import Migrate
 from datetime import datetime
 import re
 
@@ -14,6 +14,14 @@ app.config['UPLOAD_FOLDER'] = 'uploads'  # Folder for lesson images
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login' 
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))  # მომხმარებლის დაბრუნება
 
 # ბაზა
 class User(db.Model):
@@ -29,6 +37,10 @@ class User(db.Model):
 
     def __repr__(self):
         return f'<User {self.username}>'
+    
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))  # მომხმარებლის მისაღებად ID-ს გამოყენებით
     
 class VideoWatch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -573,11 +585,26 @@ def delete_lesson(lesson_id):
     flash('გაკვეთილი წაშლილია!')
     return redirect(url_for('admin_video'))
 
+
+
 @app.route('/admin-comments')
 def admin_comments():
     messages = ContactMessage.query.all()
     return render_template('comments.html', messages=messages)
 
+@app.route('/delete_message/<int:message_id>', methods=['POST'])
+def delete_message(message_id):
+    message = ContactMessage.query.get_or_404(message_id)
+    db.session.delete(message)
+    db.session.commit()
+    flash('შეტყობინება წაიშალა!')
+    return redirect(url_for('admin_comments'))
+
+
+@app.route('/admin-user')
+def users():
+    users = User.query.all()
+    return render_template('admin-user.html', users=users)
 
 @app.route('/logout')
 def logout():
