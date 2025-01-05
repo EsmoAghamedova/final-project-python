@@ -1,0 +1,54 @@
+<head>
+  <style>
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      margin-left: 150px;
+    }
+
+    .lessons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .lesson {
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 300px;
+      text-align: center;
+      background: #ffffff;
+    }
+
+    .lesson-link {
+      display: block;
+      margin-top: 10px;
+      color: #3cb2cd;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+{% extends "base-user.html" %} {% block title %}{{ subject.name }} - {{
+subject.class_name }} კლასი{% endblock %} {% block content %}
+<div class="header">
+  <h2>{{ subject.name }} - {{ subject.class_name }} კლასი</h2>
+</div>
+
+<div class="lessons">
+  {% if lessons %} {% for lesson in lessons %}
+  <div class="lesson">
+    <h3>{{ lesson.title }}</h3>
+    <a href="{{ url_for('watch_video', lesson_id=lesson.id) }}" target="_blank" class="lesson-link">
+      გაკვეთილის ნახვა
+    </a>
+  </div>
+  {% endfor %} {% else %}
+  <p class="text-center">
+    მალე დაემატება გაკვეთილები. ბოდიშს გიხდით და გმადლობთ ლოდინისთვის! 💖
+  </p>
+  {% endif %}
+</div>
+{% endblock %}

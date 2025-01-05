@@ -1,0 +1,34 @@
+{% extends "base-user.html" %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+<div class="main-content">
+  <div class="header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin: 0; font-size: 24px; color: rgb(60, 178, 205);">მთავარი</h2>
+    <p style="margin: 0; font-size: 18px; color: #555;">გამარჯობა, {{ user_name }}! 👋</p>
+  </div>
+
+  <div class="content" style="margin-top: 20px;">
+    <h3 style="font-size: 20px; margin-bottom: 20px; color: rgb(60, 178, 205);">სტატისტიკა და დეტალები</h3>
+
+    <div class="card-container" style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <!-- Card 1 -->
+      <div class="card" style="background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 10px; flex: 1; min-width: 250px;">
+        <h4 style="margin-bottom: 10px; font-size: 18px; color: rgb(60, 178, 205);">ნანახი გაკვეთილების რაოდენობა 💻</h4>
+        {% if videos_watched > 0 %}
+        <p style="margin: 0; font-size: 16px; color: #333;">{{ videos_watched }}</p>
+        {% else %}
+        <p style="margin: 0; font-size: 16px; color: #999;">ჯერჯერობით გაკვეთილი არ გაქვს ნანახი 😅</p>
+        {% endif %}
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card" style="background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 20px; border-radius: 10px; flex: 1; min-width: 250px;">
+        <h4 style="margin-bottom: 10px; font-size: 18px; color: rgb(60, 178, 205);">ქულების რაოდენობა 💯</h4>
+        <p style="margin: 0; font-size: 16px; color: #333;">{{ total_score | default(0) }} ქ.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
+    <title>CogniPeak - გაკვეთილები</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: rgb(60, 178, 205);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .sidebar h3 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        padding: 10px 20px;
+        transition: background 0.3s;
+        cursor: pointer;
+      }
+
+      .sidebar ul li:hover {
+        background: rgb(40, 158, 185);
+      }
+
+      .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        display: block;
+      }
+
+      .main-content {
+        display: none;
+      }
+
+      .mainn-content {
+        margin-top: 30px;
+        margin-left: 300px;
+        margin-right: 20px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background: #fff;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h2 {
+        margin: 0;
+      }
+
+      .subjects {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        align-content: center;
+      }
+
+      .subject {
+        margin: 20px;
+        width: 300px;
+        background: #fff;
+        color: rgb(60, 178, 205);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+
+      .subject:hover {
+        transform: translateY(-5px);
+      }
+
+      .subject a {
+        text-decoration: none;
+        color: rgb(60, 178, 205);
+        font-weight: bold;
+      }
+
+      .search-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .search-form input {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 200px;
+      }
+
+      .search-form button {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgb(60, 178, 205);
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .search-form button:hover {
+        background-color: rgb(40, 158, 185);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div class="sidebar">  
+      <h3>CogniPeak</h3>
+      <ul>
+        <li><a href="/dashboard">მთავარი</a></li>
+        <li><a href="/foryou">გაკვეთილები</a></li>
+        <li><a href="/profile">პროფილი</a></li>
+        <li><a href="/settings">პარამეტრები</a></li>
+        <li><a href="/logout">გამოსვლა</a></li>
+      </ul>
+    </div>
+    -->
+
+    {% include 'base-user.html' %}
+
+    <div class="mainn-content">
+      <div class="header">
+        <h2>გაკვეთილები</h2>
+        <form
+          method="GET"
+          action="{{ url_for('search_lessons') }}"
+          class="search-form"
+        >
+          <input
+            type="text"
+            name="query"
+            placeholder="გაკვეთილის მოძებნა..."
+            required
+          />
+          <button type="submit">ძებნა</button>
+        </form>
+      </div>
+
+      {% block content %}
+      <div class="container mt-4">
+        <div class="subjects">
+          {% if lessons|length > 0 %} {% for lesson in lessons %}
+          <div class="subject">
+            <h5 class="card-title" style="margin-bottom: 10px; font-size: 16px">
+              {{ lesson.title }}
+            </h5>
+            <!-- გაკვეთილის სათაური -->
+            <p class="card-text" style="margin-bottom: 10px">
+              საგანი: {{ lesson.subject.name }}
+            </p>
+            <!-- საგნის სახელი -->
+            <a
+              href="{{ url_for('watch_video', lesson_id=lesson.id) }}"
+              target="_blank"
+            >
+              გაკვეთილის ნახვა
+            </a>
+          </div>
+          {% endfor %} {% else %}
+          <p>გაკვეთილი ვერ მოიძებნა.</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endblock %}
+    </div>
+  </body>
+</html>

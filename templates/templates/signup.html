@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
+    <title>CogniPeak - რეგისტრაცია</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url(../../static/img/img/background-2.png);
+            background-size: cover;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fade-in 1s ease-in-out;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            padding: 5px;
+            background: rgb(60, 178, 205);
+            border-bottom: 2px solid #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo h3 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .logo img {
+            max-width: 100px;
+        }
+
+        .form {
+            padding: 20px;
+        }
+
+        .form input {
+            width: 90%;
+            margin: auto 15px;
+            padding: 10px;
+            display: block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form button {
+            width: 90%;
+            margin: 0 auto;
+            display: block;
+            padding: 10px;
+            background: rgb(60, 178, 205);
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form button:hover {
+            background: rgb(40, 158, 185);
+        }
+
+        .messages {
+            padding: 0 20px;
+        }
+
+        .messages p {
+            font-size: 14px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .messages .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .messages .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="../../static/img/logo/CogniPeak.png" alt="CogniPeak Logo">
+            <h3>CogniPeak</h3>
+        </div>
+
+        <div class="messages" id="message-container">        
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+        <form class="form" method="POST">
+        <label>სახელი</label><br>
+        <input type="text" name="name" required><br>
+        <label>მომხმარებლის სახელი</label><br>
+        <input type="text" name="username" required><br>
+        <label>ელ. ფოსტა</label><br>
+        <input type="email" name="email" required><br>
+        <label>პაროლი</label><br>
+        <input type="password" name="password" required><br>
+        <label>პაროლის გამეორება</label><br>
+        <input type="password" name="confirm_password" required><br>
+        <button type="submit">რეგისტრაცია</button>
+    </form>
+       <a href="/" style="text-decoration: none; color: black;"> <h4 style="text-align: center;">უკან დაბრუნება</h4> </a>
+
+    </div>
+
+    <script>
+        // შეტყობინებების ავტომატური გაქრობა
+        window.onload = function () {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                setTimeout(() => {
+                    messageContainer.style.transition = 'opacity 0.5s';
+                    messageContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        messageContainer.remove();
+                    }, 500);
+                }, 5000); // 5 წამი
+            }
+        };
+    </script>
+
+</body>
+</html>
