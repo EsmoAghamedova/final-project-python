@@ -169,6 +169,41 @@
           opacity: 0;
         }
       }
+
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
+
+      .flash-messages ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .flash-messages li {
+        background-color: rgba(60, 178, 205, 0.9);
+        color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fade-out 5s ease forwards;
+      }
+
+      @keyframes fade-out {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -183,6 +218,16 @@
       </ul>
     </div>
     <div class="main-content">
+      <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <ul>
+          {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+      </div>
 <h1>მომხმარებელთა შეტყობინებები</h1>
     <table border="1">
         <thead>
