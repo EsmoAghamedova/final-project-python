@@ -7,6 +7,7 @@
     }
 
     .lessons {
+      margin-left: 120px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -28,12 +29,27 @@
       color: #3cb2cd;
       text-decoration: none;
     }
+
+    @media (max-width: 570px) {
+      .header {
+        margin-left: 0;
+
+      }
+      .text-center {
+        margin-left: 0 !important;
+      }
+      .lessons {
+        margin-left: 0;
+      }
+    }
   </style>
 </head>
 
 {% extends "base-user.html" %} {% block title %}{{ subject.name }} - {{
 subject.class_name }} კლასი{% endblock %} {% block content %}
 <div class="header">
+    <a href="/side-bar"><img class="burger-bar" src="../static/img/img/burger-bar.png" alt="Burger Bar" style="width: 40px; height: 40px; display: none;"></a>
+
   <h2>{{ subject.name }} - {{ subject.class_name }} კლასი</h2>
 </div>
 
@@ -46,7 +62,7 @@ subject.class_name }} კლასი{% endblock %} {% block content %}
     </a>
   </div>
   {% endfor %} {% else %}
-  <p class="text-center">
+  <p class="text-center" style="margin-left: 120px;">
     მალე დაემატება გაკვეთილები. ბოდიშს გიხდით და გმადლობთ ლოდინისთვის! 💖
   </p>
   {% endif %}

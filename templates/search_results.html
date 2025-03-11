@@ -132,6 +132,29 @@
       .search-form button:hover {
         background-color: rgb(40, 158, 185);
       }
+
+      @media (max-width: 950px) {
+        .header {
+          flex-direction: column;
+          gap: 10px;
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 670px) {
+        .sidebar {
+          display: none !important;
+        }
+
+        .mainn-content {
+          margin-left: 20px;
+        }
+
+        .burger-bar {
+          display: block !important;
+          cursor: pointer !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -151,6 +174,14 @@
 
     <div class="mainn-content">
       <div class="header">
+        <a href="/side-bar"
+          ><img
+            class="burger-bar"
+            src="../static/img/img/burger-bar.png"
+            alt="Burger Bar"
+            style="width: 40px; height: 40px; display: none"
+        /></a>
+
         <h2>გაკვეთილები</h2>
         <form
           method="GET"
