@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ka">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
+    <title>{% block title %}CogniPeak{% endblock title %}</title>
+    <style>
+      /* Reset Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(120deg, #f0f9ff, #c9efff);
+        color: #333;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 250px;
+        background-color: #3cb2cd;
+        color: #fff;
+        position: fixed;
+        height: 100%;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .sidebar h3 {
+        text-align: center;
+        margin-top: 26px;
+        margin-bottom: 40px;
+        font-size: 26px;
+        font-weight: bold;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .sidebar ul li {
+        padding: 15px 20px;
+        transition: background 0.3s ease, transform 0.2s ease;
+        cursor: pointer;
+      }
+
+      .sidebar ul li:hover {
+        background-color: rgb(40, 158, 185);
+        transform: scale(1.05);
+      }
+
+      .sidebar ul li a {
+        color: white;
+        font-size: 18px;
+        text-decoration: none;
+      }
+
+      /* Main Content Styles */
+      .main-content {
+        margin-left: 120px;
+        padding: 20px;
+        flex: 1;
+      }
+
+      .header {
+        background: #fff;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 8px;
+      }
+
+      .header h2 {
+        margin: 0;
+        font-size: 28px;
+        color: #3cb2cd;
+      }
+
+      .search-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .search-form input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 250px;
+        font-size: 16px;
+      }
+
+      .search-form button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        background-color: #3cb2cd;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+
+      .search-form button:hover {
+        background-color: #289eb9;
+        transform: scale(1.05);
+      }
+
+      /* Page Cards (Dashboard and Lessons) */
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .card h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #3cb2cd;
+      }
+
+      .card p {
+        font-size: 16px;
+        color: #555;
+      }
+
+      .card a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        background-color: #3cb2cd;
+        color: white;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: background 0.3s ease;
+        text-decoration: none;
+      }
+
+      .card a:hover {
+        background-color: #289eb9;
+      }
+
+      /* Forms (For Profile, Settings, etc.) */
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #3cb2cd;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+
+      .form-group button {
+        padding: 10px 20px;
+        background-color: #3cb2cd;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .form-group button:hover {
+        background-color: #289eb9;
+      }
+
+      /* Footer Styles */
+      footer {
+        background-color: #3cb2cd;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+        margin-top: auto;
+      }
+
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
+
+      .flash-messages ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .flash-messages li {
+        background-color: #3cb2cd;
+        color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fade-out 5s ease forwards;
+      }
+
+      @keyframes fade-out {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      @media (max-width: 570px) {
+        .sidebar {
+          display: none;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .burger-bar {
+          display: block !important;
+
+        }
+      }
+
+      @media (max-width: 475px) {
+        .hi {
+          display: none;
+        }
+      }
+    </style>
+    {% block extra_styles %}{% endblock extra_styles %}
+  </head>
+  <body>
+    <div class="sidebar">
+      <h3>CogniPeak</h3>
+      <ul>
+        <li id="dashboard"><a href="/dashboard">მთავარი</a></li>
+        <li id="foryou"><a href="/foryou">გაკვეთილები</a></li>
+
+        <li><a href="/profile">პროფილი</a></li>
+        <li><a href="/settings">პარამეტრები</a></li>
+        <li><a href="/contactt">კონტაქტი</a></li>
+        <li><a href="/logout">გამოსვლა</a></li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %}
+        <ul>
+          {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+      </div>
+
+      {% block content %}
+      <!-- მთავარი კონტენტი -->
+      {% endblock content %}
+    </div>
+
+    <script>
+      // Remove flash messages after 5 seconds
+      setTimeout(() => {
+        const flashMessages = document.querySelector(".flash-messages");
+        if (flashMessages) {
+          flashMessages.remove();
+        }
+      }, 10000);
+    </script>
+  </body>
+</html>

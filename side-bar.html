@@ -4,31 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="website icon" href="../static/img/logo/CogniPeak-title.png" />
-    <title>CogniPeak - გაკვეთილები</title>
+    <title>{% block title %}CogniPeak{% endblock title %}</title>
     <style>
-      body {
+      /* Reset Styles */
+      * {
         margin: 0;
-        font-family: 'Arial', sans-serif;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
         background: linear-gradient(120deg, #f0f9ff, #c9efff);
         color: #333;
-        display: flex;
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
       /* Sidebar Styles */
       .sidebar {
-        width: 250px;
+        width: 100%;
         background-color: #3cb2cd;
         color: #fff;
+        position: fixed;
+        height: 100%;
+        padding: 20px 0;
         display: flex;
         flex-direction: column;
-        padding: 20px 0;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
       }
 
       .sidebar h3 {
         text-align: center;
-        margin-bottom: 30px;
+        margin-top: 26px;
+        margin-bottom: 40px;
         font-size: 26px;
         font-weight: bold;
       }
@@ -36,11 +46,12 @@
       .sidebar ul {
         list-style: none;
         padding: 0;
+        text-align: center;
       }
 
       .sidebar ul li {
         padding: 15px 20px;
-        transition: background 0.3s, transform 0.2s;
+        transition: background 0.3s ease, transform 0.2s ease;
         cursor: pointer;
       }
 
@@ -57,24 +68,19 @@
 
       /* Main Content Styles */
       .main-content {
-        display: none;
-        
-      }
-
-      .mainn-content {
-        margin-top: 30px;
-        margin-left: 300px;
-        margin-right: 20px;
+        margin-left: 120px;
+        padding: 20px;
+        flex: 1;
       }
 
       .header {
         background: #fff;
         padding: 15px 20px;
+        margin-bottom: 20px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
         border-radius: 8px;
       }
 
@@ -106,7 +112,7 @@
         color: white;
         font-size: 16px;
         cursor: pointer;
-        transition: background 0.3s, transform 0.2s;
+        transition: background 0.3s ease, transform 0.2s ease;
       }
 
       .search-form button:hover {
@@ -114,34 +120,39 @@
         transform: scale(1.05);
       }
 
-      /* Subjects Section */
-      .subjects {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: center;
-        align-content: center;
+      /* Page Cards (Dashboard and Lessons) */
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
       }
 
-      .subject {
-        margin: 20px;
-        width: 300px;
+      .card {
         background: #fff;
-        color: #3cb2cd;
-        padding: 20px;
         border-radius: 12px;
+        padding: 20px;
         text-align: center;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
 
-      .subject:hover {
+      .card:hover {
         transform: translateY(-10px);
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
       }
 
-      .subject a {
+      .card h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #3cb2cd;
+      }
+
+      .card p {
+        font-size: 16px;
+        color: #555;
+      }
+
+      .card a {
         display: inline-block;
         margin-top: 10px;
         padding: 10px 15px;
@@ -153,7 +164,61 @@
         text-decoration: none;
       }
 
-      .subject a:hover {
+      .card a:hover {
+        background-color: #289eb9;
+      }
+
+      /* Forms (For Profile, Settings, etc.) */
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #3cb2cd;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+
+      .form-group button {
+        padding: 10px 20px;
+        background-color: #3cb2cd;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .form-group button:hover {
         background-color: #289eb9;
       }
 
@@ -169,73 +234,56 @@
         margin-top: auto;
       }
 
-      @media (max-width: 950px) {
-        .header {
-          flex-direction: column;
-          gap: 10px;
-          padding: 10px;
+      .flash-messages {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
+
+      .flash-messages ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .flash-messages li {
+        background-color: #3cb2cd;
+        color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fade-out 5s ease forwards;
+      }
+
+      @keyframes fade-out {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
         }
       }
 
-      @media (max-width: 670px) {
-        .sidebar {
-          display: none !important;
-        }
-
-        .mainn-content {
-          margin-left: 20px;
-      }
-
-      .burger-bar {
-        display: block !important;
-        cursor: pointer !important;
-      }
-    }
     </style>
+    {% block extra_styles %}{% endblock extra_styles %}
   </head>
   <body>
-  <!--  <div class="sidebar">
+    <div class="sidebar">
       <h3>CogniPeak</h3>
       <ul>
-        <li><a href="/dashboard">მთავარი</a></li>
-        <li><a href="/foryou">გაკვეთილები</a></li>
+        <li id="dashboard"><a href="/dashboard">მთავარი</a></li>
+        <li id="foryou"><a href="/foryou">გაკვეთილები</a></li>
+
         <li><a href="/profile">პროფილი</a></li>
         <li><a href="/settings">პარამეტრები</a></li>
         <li><a href="/contactt">კონტაქტი</a></li>
         <li><a href="/logout">გამოსვლა</a></li>
       </ul>
-    </div> -->
-
-    {% include 'base-user.html' %}
-
-  {% block content %}
-    <div class="mainn-content">
-  <div class="header">
-    <a href="/side-bar"><img class="burger-bar" src="../static/img/img/burger-bar.png" alt="Burger Bar" style="width: 40px; height: 40px; display: none;"></a>
-    <h2>გაკვეთილები</h2>
-    <form method="GET" action="{{ url_for('search_lessons') }}" class="search-form">
-      <input type="text" name="query" placeholder="გაკვეთილის მოძებნა..." required />
-      <button type="submit">ძებნა</button>
-    </form>
-  </div>
-
-
-        <h3 style="text-align: center; margin-bottom: 50px;">მეგობრებო, შეგიძლიათ თქვენი საგანი, საგნის გამომცემლობა და კლასი მომწეროთ კონტაქტების საშუალებით და მე ვეცდები მალე დავამტო! 😊 </h3>
-
-
-
-  <div class="subjects">
-    {% for subject in subjects %}
-    <div class="subject">
-      <h5>{{ subject.name }}</h5>
-      <p>კლასი: {{ subject.class_name }}</p>
-      <a href="{{ url_for('subject_page', subject_id=subject.id) }}">გახსენი</a>
-    </div>
-    {% endfor %}
-  </div>
-  {% endblock %}
-</div>
-
     </div>
   </body>
 </html>
