@@ -117,6 +117,10 @@ def contact():
 def gakvetilebi():
     return render_template('1.html')
 
+@app.route('/side-bar')
+def side_bar():
+    return render_template('side-bar.html')
+
 # პაროლის ვალიდაციის ფუნქცია
 def validate_password(password):
     if len(password) < 8:
